@@ -1,16 +1,34 @@
-# TODO: docstring <-- lol
+# Find all the currently modified lines with TODOs
+
 main() {
-    difiles \
-        | grab_changed_lines
+    difiles | process_changed_files
 }
 
-grab_changed_lines() {
+process_changed_files() {
     while read filename; do
-        echo $filename
-        git diff HEAD $filename \
-            | grep '^+' \
-            | grep -v '^+++ ' \
-            | sed -e 's/^+//'
+        get_changed_lines "$filename" \
+            | filter_todo_lines \
+            | handle_todo_line $filename
+    done
+}
+
+get_changed_lines() {
+    git diff HEAD $1 \
+        | grep '^+' \
+        | grep -v '^+++ ' \
+        | sed -e 's/^+//'
+}
+
+handle_todo_line() {
+    filename=$1
+    while read line; do
+        echo "$filename" "$line"
+    done
+}
+
+filter_todo_lines() {
+    while read line; do
+        grep -i 'TODO[\(:]' <<< $line
     done
 }
 
