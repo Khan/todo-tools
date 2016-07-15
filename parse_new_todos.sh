@@ -70,7 +70,7 @@ save_todo() {
     if [[ $todo =~ $date_pattern ]]; then
         DATE="${BASH_REMATCH[1]}"
         MSG="${BASH_REMATCH[2]}"
-        echo -e $(date --iso-8601 --date "$DATE")"\t|\t$filename\t|\t$MSG" >> ~/.todos
+        echo -e $(date --iso-8601 --date "$DATE")"  |  $filename  |  $MSG" >> ~/.todos
     fi
 }
 
