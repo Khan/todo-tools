@@ -1,6 +1,8 @@
 # Find all the currently modified lines with TODOs.
 #
 # TODO(riley|sergei): Flesh out docstring.
+
+DATE_CMD='gdate'
 POTENTIAL_TODOS=()
 
 main() {
@@ -19,46 +21,41 @@ process_changed_files() {
         # NOTE: Added this because it would fail otherwise on a removed file.
         # TODO(sergei): Remove this comment :P
         if [ -f $filename ]; then
-            get_changed_lines "$filename" \
-                | filter_todo_lines \
-                | handle_todo_line $filename
+            lines=$(get_changed_lines "$filename")
+            process_lines "$lines"
         fi
     done
 }
 
 get_changed_lines() {
-    git diff HEAD $1 \
+    git diff HEAD "$1" \
         | grep '^+' \
         | grep -v '^+++ ' \
         | sed -e 's/^+//'
 }
 
-handle_todo_line() {
-    filename=$1
-    while read line; do
-        echo -e "+ $filename | $line"
-        save_todo "$filename" "$line"
-    done
-}
-
-filter_todo_lines() {
+process_lines() {
+    lines="$1"
     while read line; do
         # If this matches, we're pretty confident that it's a comment so we
         # print and process it for saving.
-        grep -q '[#(//)] TODO[\(:]' <<< $line
+        grep -q '[#(//)] TODO[\(:]' <<< "$line"
         found_match=$?
 
         if [ $found_match -eq 0 ]; then
-            grep '[#(//)] TODO[\(:]' <<< $line
+            echo -e "+ $filename | $line"
+            save_todo "$filename" "$line"
 
         # If the above doesn't match, there's still a chance that it's a TODO.
         # We run it through a more permissive filter; if *that* matches we
         # prompt the user for input.
         elif [[ $line =~ "TODO" ]]; then
+            # NOTE: Appending to global arrays must happen in the main process.
+            # If this is ever refactored, make sure that this function is not
+            # in a subshell.
             POTENTIAL_TODOS+=("$line")
-            POTENTIAL_TODOS+=('yay')
         fi
-    done< <($1)
+    done < <(echo "$lines")
 }
 
 save_todo() {
@@ -70,7 +67,7 @@ save_todo() {
     if [[ $todo =~ $date_pattern ]]; then
         DATE="${BASH_REMATCH[1]}"
         MSG="${BASH_REMATCH[2]}"
-        echo -e $(date --iso-8601 --date "$DATE")"  |  $filename  |  $MSG" >> ~/.todos
+        echo -e $("$DATE_CMD" --iso-8601 --date "$DATE")"  |  $filename  |  $MSG" >> ~/.todos
     fi
 }
 
@@ -90,7 +87,7 @@ check_if_todo() {
     while true; do
         read -p "Is this a TODO? [y/n]" -n 1 reply
         case $reply in
-            [Yy]* ) echo line; break;;
+            [Yy]* ) echo $reply; break;;
             [Nn]* ) return;;
             * ) echo "Please answer y or n.";;
         esac
