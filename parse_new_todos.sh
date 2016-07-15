@@ -72,17 +72,18 @@ save_todo() {
 
     shopt -s nocasematch
     if [[ $todo =~ $date_pattern ]]; then
-        DATE="${BASH_REMATCH[1]}"
-        MSG="${BASH_REMATCH[2]}"
-        echo -e $("$DATE_CMD" --iso-8601 --date "$DATE")"  |  $filename  |  $MSG" >> ~/.todos
+        date="${BASH_REMATCH[1]}"
+        line="${BASH_REMATCH[2]}"
+        formatted_date=$("$DATE_CMD" --iso-8601 --date "$date")
+        echo "$formatted_date  |  $filename  |  $line" >> ~/.todos
     fi
 }
 
 process_potential_todos() {
     echo -e "\nThese might be TODOs.  Did you mean to do them?"
     echo -e "-----------------------------------------------"
-    for line in "${POTENTIAL_TODOS[@]}"; do
-        echo "$line"
+    for file_and_line in "${POTENTIAL_TODOS[@]}"; do
+        echo "$file_and_line"
     done
 }
 
