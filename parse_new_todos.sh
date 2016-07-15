@@ -10,14 +10,7 @@ main() {
     process_potential_todos
 }
 
-is_first_todo=true
 process_changed_files() {
-    if [ "$is_first_todo" = true ]; then
-        echo -e "Here's a list of TODOs you added in this commit:"
-        echo -e "------------------------------------------------"
-        is_first_todo=false
-    fi
-
     while read filename; do
         # NOTE: Added this because it would fail otherwise on a removed file.
         # TODO(sergei): Remove this comment :P
@@ -44,6 +37,7 @@ process_lines() {
         found_match=$?
 
         if [ $found_match -eq 0 ]; then
+            maybe_print_header
             output "$filename" "$line"
             save_todo "$filename" "$line"
 
@@ -57,6 +51,15 @@ process_lines() {
             POTENTIAL_TODOS+=("$(output "$filename" "$line")")
         fi
     done < <(echo "$lines")
+}
+
+is_first_todo=true
+maybe_print_header() {
+    if [ "$is_first_todo" = true ]; then
+        echo -e "Here's a list of TODOs you added in this commit:"
+        echo -e "------------------------------------------------"
+        is_first_todo=false
+    fi
 }
 
 output() {
@@ -79,10 +82,14 @@ save_todo() {
     fi
 }
 
+is_first_potential_todo=true
 process_potential_todos() {
-    echo -e "\nThese might be TODOs.  Did you mean to do them?"
-    echo -e "-----------------------------------------------"
     for file_and_line in "${POTENTIAL_TODOS[@]}"; do
+        if [ "$is_first_potential_todo" = true ]; then
+            echo -e "\nThese might be TODOs.  Did you mean to do them?"
+            echo -e "-----------------------------------------------"
+            is_first_potential_todo=false
+        fi
         echo "$file_and_line"
     done
 }
