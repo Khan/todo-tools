@@ -14,6 +14,7 @@ is_first_todo=true
 process_changed_files() {
     if [ "$is_first_todo" = true ]; then
         echo -e "Here's a list of TODOs you added in this commit:"
+        echo -e "------------------------------------------------"
         is_first_todo=false
     fi
 
@@ -43,7 +44,7 @@ process_lines() {
         found_match=$?
 
         if [ $found_match -eq 0 ]; then
-            echo -e "+ $filename | $line"
+            output "$filename" "$line"
             save_todo "$filename" "$line"
 
         # If the above doesn't match, there's still a chance that it's a TODO.
@@ -53,9 +54,15 @@ process_lines() {
             # NOTE: Appending to global arrays must happen in the main process.
             # If this is ever refactored, make sure that this function is not
             # in a subshell.
-            POTENTIAL_TODOS+=("$line")
+            POTENTIAL_TODOS+=("$(output "$filename" "$line")")
         fi
     done < <(echo "$lines")
+}
+
+output() {
+    filename=$1
+    line=$2
+    echo -e "+ $filename | $line"
 }
 
 save_todo() {
@@ -72,25 +79,10 @@ save_todo() {
 }
 
 process_potential_todos() {
+    echo -e "\nThese might be TODOs.  Did you mean to do them?"
+    echo -e "-----------------------------------------------"
     for line in "${POTENTIAL_TODOS[@]}"; do
-        # TODO(riley): We could split things into three lists:
-        #
-        # Definitely TODO: Automatically print and save all of these.
-        # Maybe TODO, no date stamp: Automatically print all of these after a
-        #                            "these *might* be todos" disclaimer.
-        # Maybe TODO, date stamp: Prompt user and save accordingly.
-        check_if_todo | save_todo
-    done
-}
-
-check_if_todo() {
-    while true; do
-        read -p "Is this a TODO? [y/n]" -n 1 reply
-        case $reply in
-            [Yy]* ) echo $reply; break;;
-            [Nn]* ) return;;
-            * ) echo "Please answer y or n.";;
-        esac
+        echo "$line"
     done
 }
 
