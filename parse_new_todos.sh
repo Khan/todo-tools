@@ -4,7 +4,6 @@
 #
 # TODO(riley|sergei): Flesh out docstring.
 
-DATE_CMD='gdate'
 POTENTIAL_TODOS=()
 
 YELLOW='\033[1;33m'
