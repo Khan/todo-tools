@@ -1,3 +1,5 @@
+#! /bin/bash
+
 # TODO(riley): Docstring.
 #
 # Draft.
