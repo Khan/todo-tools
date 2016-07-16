@@ -1,10 +1,19 @@
 # TODO(riley): Docstring.
 #
 # Draft.
+
+YELLOW='\033[1;33m'
+NO_COLOR='\033[0m'
+
+is_first_todo=true
 while read line; do
     deadline="${line:0:10}"
-    if [[ "$deadline" < "$(date --iso-8601)" ]]; then
-       echo "You should have already done this one:"
-       echo -e "$line\n"
+    if [[ "$deadline" < "$(date "+%Y-%m-%d")" ]]; then
+        if [ "$is_first_todo" = true ]; then
+            echo $YELLOW"You should have already done this one:"
+            echo "--------------------------------------"$NO_COLOR
+            is_first_todo=false
+        fi
+        echo "$line"
     fi
 done <~/.todos

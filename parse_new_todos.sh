@@ -7,6 +7,9 @@
 DATE_CMD='gdate'
 POTENTIAL_TODOS=()
 
+YELLOW='\033[1;33m'
+NO_COLOR='\033[0m'
+
 main() {
     process_changed_files < <(difiles)
     process_potential_todos
@@ -55,8 +58,9 @@ process_lines() {
 is_first_todo=true
 maybe_print_header() {
     if [ "$is_first_todo" = true ]; then
-        echo -e "Here's a list of TODOs you added in this commit:"
-        echo -e "------------------------------------------------"
+        text="Here's a list of TODOs you added in this commit:"
+        underline="------------------------------------------------"
+        echo -e "$YELLOW"$text"\n"$underline"$NO_COLOR"
         is_first_todo=false
     fi
 }
@@ -76,8 +80,7 @@ save_todo() {
     if [[ $todo =~ $date_pattern ]]; then
         date="${BASH_REMATCH[1]}"
         line="${BASH_REMATCH[2]}"
-        formatted_date=$("$DATE_CMD" --iso-8601 --date "$date")
-        echo "$formatted_date  |  $filename  |  $line" >> ~/.todos
+        echo "$date  |  $filename  |  $line" >> ~/.todos
     fi
 }
 
@@ -85,8 +88,9 @@ is_first_potential_todo=true
 process_potential_todos() {
     for file_and_line in "${POTENTIAL_TODOS[@]}"; do
         if [ "$is_first_potential_todo" = true ]; then
-            echo -e "\nThese might be TODOs.  Did you mean to do them?"
-            echo -e "-----------------------------------------------"
+            text="These might be TODOs.  Did you mean to do them?"
+            underline="----------------------------------------------"
+            echo -e "\n""$YELLOW"$text"\n"$underline"$NO_COLOR"
             is_first_potential_todo=false
         fi
         echo "$file_and_line"
