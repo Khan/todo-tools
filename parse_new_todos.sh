@@ -33,10 +33,7 @@ process_lines() {
     while read line; do
         # If this matches, we're pretty confident that it's a comment so we
         # print and process it for saving.
-        grep -q '[#(//)] TODO[\(:]' <<< "$line"
-        found_match=$?
-
-        if [ $found_match -eq 0 ]; then
+        if [[ "$line" =~ [#(//)]\ TODO[:\(] ]]; then
             maybe_print_header
             output "$filename" "$line"
             save_todo "$filename" "$line"
@@ -44,7 +41,7 @@ process_lines() {
         # If the above doesn't match, there's still a chance that it's a TODO.
         # We run it through a more permissive filter; if *that* matches we
         # prompt the user for input.
-        elif [[ $line =~ "TODO" ]]; then
+        elif [[ "$line" =~ TODO ]]; then
             # NOTE: Appending to global arrays must happen in the main process.
             # If this is ever refactored, make sure that this function is not
             # in a subshell.
