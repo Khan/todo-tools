@@ -1,3 +1,5 @@
+#! /bin/bash
+
 # Find all the currently modified lines with TODOs.
 #
 # TODO(riley|sergei): Flesh out docstring.
