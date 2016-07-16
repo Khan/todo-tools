@@ -4,6 +4,9 @@
 #
 # TODO(riley|sergei): Flesh out docstring.
 
+# Enable user input.  Only needed if this is run in a git pre-commit hook
+exec < /dev/tty
+
 POTENTIAL_TODOS=()
 
 YELLOW='\033[1;33m'
