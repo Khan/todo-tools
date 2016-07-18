@@ -15,7 +15,6 @@ NO_COLOR='\033[0m'
 main() {
     process_changed_files < <(difiles)
     process_potential_todos
-    maybe_prompt_to_finish
 }
 
 process_changed_files() {
@@ -102,14 +101,6 @@ process_potential_todos() {
 
 difiles() {
     git status --porcelain | awk '{print $2}'
-}
-
-maybe_prompt_to_finish() {
-    # If any TODOs were printed, prompt before continuing
-    if [ "$is_first_todo" = false -o "$is_first_potential_todo" = false ]; then
-        echo
-        read -p "<Enter> to proceed with committing TODOs. "
-    fi
 }
 
 main $*
