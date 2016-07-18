@@ -12,8 +12,8 @@ while read line; do
     deadline="${line:0:10}"
     if [[ "$deadline" < "$(date "+%Y-%m-%d")" ]]; then
         if [ "$is_first_todo" = true ]; then
-            echo $YELLOW"You should have already done this one:"
-            echo "--------------------------------------"$NO_COLOR
+            echo -e $YELLOW"You should have already done this one:"
+            echo -e "--------------------------------------"$NO_COLOR
             is_first_todo=false
         fi
         echo "$line"
