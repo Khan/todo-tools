@@ -39,7 +39,8 @@ def main():
 
     if args.install and os.path.isdir(os.path.join(args.install, '.git')):
         # TODO: copy instance of running file to given directory
-        shutil.copy('./todo_tools.py', os.path.join(args.install, '.git/hooks/post-commit'))
+        shutil.copy('./todo_tools.py', os.path.join(args.install,
+                    '.git/hooks/post-commit'))
     elif args.check:
         run_as_checker(args)
     else:
@@ -125,7 +126,8 @@ def get_args():
                         help=('Install post-commit hook to git repository. '
                               'Run from root of this repository.'))
     parser.add_argument('-c', '--check', action='store_true', default=False,
-                        help=('Check outstanding TODOs and alert if any are overdue'))
+            help=('Check outstanding TODOs and alert '
+                  'if any are overdue'))
     args = parser.parse_args()
     # create the todo file if it doesn't exist
     args.file = os.path.abspath(args.file)
