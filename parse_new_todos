@@ -104,5 +104,3 @@ difiles() {
 }
 
 main $*
-
-# test

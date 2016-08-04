@@ -14,25 +14,22 @@ For each repository you want to log TODO's, run
 
 ./todo-tools.py -i ~/myawesomerepo
 
-# 
-
 """
 
 from __future__ import print_function
 
-import sys
-import os
-import shutil
+
 import argparse
-import re
 from datetime import datetime as dt
+import os
+import re
+import sys
+import shutil
 import time
 
 from fabulous import color
 import git
 
-# TODO(@zeb[2016-08-04]): pls check if werks
-# TODO(@zeb[2015-08-04]): This should fail
 
 def main():
     args = get_args()
@@ -83,7 +80,6 @@ def run_as_hook(args):
                     todos.append((filediff.b_path, clean_line))
                 elif check_is_potential_todo(clean_line):
                     potential_todos.append((filediff.b_path, clean_line))
-    # TODO: consolidate saving
     if todos:
         print(color.bold(color.yellow(
             "Here's a list of TODOs you added in this commit:\n"
@@ -101,7 +97,7 @@ def run_as_hook(args):
                 choice = input('+ {} | {} (y/N) '.format(*todo))
                 if choice.lower() == 'y':
                     check_date_and_save(todofile, todo[0], todo[1])
-    print('')  # print newline for prettiness # TODO: ask user
+    print('')
 
 
 def check_date_and_save(todofile, filename, line):
