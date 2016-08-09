@@ -30,21 +30,18 @@ def main():
     sys.stdout = io.StringIO()
 
     times = []
-    for i in tqdm.tqdm(range(1000)):
-        localtimes = []
-        for j in range(5):
-            stime = time.time()
-            todo_tools.run_as_hook(os.path.join(os.path.expanduser('~/.todo')),
-                                    'HEAD~{}'.format(i), 'HEAD~{}'.format(i + 1),
-                                    skip=True)
-            localtimes.append(time.time() - stime)
-        times.append(statistics.mean(localtimes))
+    for i in tqdm.tqdm(range(5000)):
+        stime = time.time()
+        todo_tools.run_as_hook(os.path.join(os.path.expanduser('~/.todo')),
+                                'HEAD~{}'.format(i), 'HEAD~{}'.format(i + 1),
+                                skip=True)
+        times.append(time.time() - stime)
 
     sys.stdout = actualstdout
 
     os.chdir(olddir)
 
-    plt.hist(times, bins=20)
+    plt.hist(times, bins=30)
     plt.savefig('./profile_hist.png')
 
 
