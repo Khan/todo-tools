@@ -20,6 +20,7 @@ import todo_tools
 
 def main():
     args = get_args()
+    olddir = os.getcwd()
 
     os.chdir(args.repo)
 
@@ -41,7 +42,9 @@ def main():
 
     sys.stdout = actualstdout
 
-    plt.hist(times)
+    os.chdir(olddir)
+
+    plt.hist(times, bins=20)
     plt.savefig('./profile_hist.png')
 
 
