@@ -45,7 +45,7 @@ def main():
         run_as_checker(args)
     else:
         sys.stdin = open('/dev/tty')
-        run_as_hook(args)
+        run_as_hook(args.file)
 
 
 def run_as_checker(args):
@@ -62,13 +62,24 @@ def run_as_checker(args):
             print(todo)
 
 
-def run_as_hook(args):
+def run_as_hook(filename, commitA=None, commitB=None, skip=False):
+    """
+    filename: str
+    commitA: str
+    commitB: str
+    skip: bool
+
+    commitA and commitB exist /solely/ for profiling and testing
+    """
     # Initialize new repo (called from git hook so this directory works)
     repo = git.Repo('.')
-    # Old commit
-    previous_commit = repo.commit('HEAD~1')
-    # current commit
-    current_commit = repo.commit('HEAD')
+
+    if commitA is not None and commitB is not None:
+        previous_commit = repo.commit(commitB)
+        current_commit = repo.commit(commitA)
+    else:
+        previous_commit = repo.commit('HEAD~1')
+        current_commit = repo.commit('HEAD')
     # Get specific changes in each file
     todos = []
     potential_todos = []
@@ -85,7 +96,7 @@ def run_as_hook(args):
         print(color.bold(color.yellow(
             "Here's a list of TODOs you added in this commit:\n"
             "------------------------------------------------")))
-        with open(args.file, 'a') as todofile:
+        with open(filename, 'a') as todofile:
             for todo in todos:
                 print('+ {} | {}'.format(*todo))
                 check_date_and_save(todofile, todo[0], todo[1])
@@ -93,9 +104,12 @@ def run_as_hook(args):
         print(color.bold(color.yellow(
             "These might be TODOs.  Did you mean to do them?\n"
             "-----------------------------------------------")))
-        with open(args.file, 'a') as todofile:
+        with open(filename, 'a') as todofile:
             for todo in potential_todos:
-                choice = input('+ {} | {} (y/N) '.format(*todo))
+                if skip:
+                    choice = 'n'
+                else:
+                    choice = input('+ {} | {} (y/N) '.format(*todo))
                 if choice.lower() == 'y':
                     check_date_and_save(todofile, todo[0], todo[1])
     print('')
