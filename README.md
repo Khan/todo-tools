@@ -21,14 +21,15 @@ Here's a list of TODOs you added in this commit:
 These might be TODOs.  Did you mean to do them?
 -----------------------------------------------
 + README.md | # TODO Tools (y/N) 
-+ README.md | Hey, do you like `TODO`s? Yeah, we all probably like them a little too much... Why write actual code when you could just (y/N) 
-+ README.md | leave a `TODO`? (y/N) 
-+ README.md | about `TODO`s that you left in your code. (y/N) 
 ```
 
 ## Installation
 
 We have three different ways to install this.
+
+Note, you *do not have to do this to use the full installation*. The manual
+installation method works without cluttering your `$PATH`. If you don't care
+about that, by all means make your life easier and use `pip` or `setuptools`.
 
 ### PyPI
 
@@ -56,10 +57,6 @@ installation repository root>` to install it as a post-commit hook. For example:
 And it's enabled on that repository! Woo!
 
 ### Setuptools
-
-Note, you *do not have to do this to use this full installation*. The default
-installation method works without cluttering your `$PATH`. If you don't care
-about that, by all means make your life easier and do this.
 
 ```bash
 ┬─[william@fillory:~/todo-tools]
