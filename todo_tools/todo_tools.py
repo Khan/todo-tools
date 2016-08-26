@@ -13,7 +13,6 @@ import re
 try:
     from fabulous import color
     import git
-    import prettytable
 except ImportError:
     print('You don\'t have the necessary libraries!')
     print('Please run: pip install -r requirements.txt --user')

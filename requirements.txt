@@ -16,9 +16,6 @@ fabulous == 0.3.0
 # profiler.py: 16
 # matplotlib == 1.5.2
 
-# todo_tools/todo_tools.py: 15
-prettytable == 0.7.2
-
 # profiler.py: 14
 # seaborn == 0.7.1
 
