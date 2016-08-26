@@ -27,17 +27,7 @@ def main():
 
     if args.install_to_bashrc:
         bashrcfilename = os.path.join(os.path.expanduser('~/.bashrc'))
-        already_installed = False
-        if os.path.isfile(bashrcfilename):
-            with open(bashrcfilename, 'r') as bashrcfile:
-                for line in bashrcfile.readlines():
-                    if re.search('todo -c', line):
-                        already_installed = True
-        else:
-            already_installed = False
-        if not already_installed:
-            with open(bashrcfilename, 'a') as bashrcfile:
-                bashrcfile.write('\ntodo -c\n')
+        todo_tools.add_line_to_file_if_not_exists(bashrcfilename, 'todo -c', '\ntodo -c\n')
     elif args.clear_todos:
         sure = input("Are you sure you want to clear todo file? (y/N) ").lower()
         if sure == 'y':
@@ -51,17 +41,7 @@ def main():
         for install in [x for x in args.install_dir
                         if os.path.isdir(os.path.join(x, '.git'))]:
             hookfilename = os.path.join(install, '.git/hooks/post-commit')
-            already_installed = False
-            if os.path.isfile(hookfilename):
-                with open(hookfilename, 'r') as hookfile:
-                    for line in hookfile.readlines():
-                        if re.search('todo', line):
-                            already_installed = True
-            else:
-                already_installed = False
-            if not already_installed:
-                with open(hookfilename, 'a') as hookfile:
-                    hookfile.write('#!/bin/bash\n\ntodo\n')
+            todo_tools.add_line_to_file_if_not_exists(hookfilename, 'todo', '#!/bin/bash\n\ntodo\n')
 
             # https://stackoverflow.com/questions/12791997/how-do-you-do-a-simple-chmod-x-from-within-python
             # TL;DR chmod +x hookfile

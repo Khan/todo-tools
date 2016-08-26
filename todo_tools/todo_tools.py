@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 import sys
+import os
 from datetime import datetime as dt
 import re
 
@@ -102,3 +103,18 @@ def check_is_todo(line):
 
 def check_is_potential_todo(line):
     return re.search('TODO', line) is not None
+
+
+def add_line_to_file_if_not_exists(filename, search_str, insert_str):
+    already_installed = False
+    if os.path.isfile(filename):
+        with open(filename, 'r') as ofile:
+            for line in ofile.readlines():
+                if re.search(search_str, line):
+                    already_installed = True
+    else:
+        already_installed = False
+    if not already_installed:
+        with open(filename, 'a') as ofile:
+            ofile.write(insert_str)
+    return None
