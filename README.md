@@ -1,10 +1,11 @@
 # TODO Tools
 
-Hey, do you like `TODO`s? Yeah, we all probably like them a little too much... Why write actual code when you could just
-leave a `TODO`?
+Hey, do you like `TODO`s? Yeah, we all probably like them a little too much...
+Why write actual code when you could just leave a `TODO`?
 
-Well, fear no more about losing track of those desired code changes. This tool is a git post-commit hook that warns you
-about `TODO`s that you left in your code.
+Well, fear no more about losing track of those desired code changes. This tool
+is a git post-commit hook that warns you about `TODO`s that you left in your
+code.
 
 ## Example (How do you mean?)
 
@@ -27,13 +28,34 @@ These might be TODOs.  Did you mean to do them?
 
 ## Installation
 
-Clone this repository using `git clone`, and then run `todo_tools.py -i <desired installation repository root>` to
-install it as a post-commit hook. For example:
+Clone this repository using `git clone`, and then run `./bin/todo -i <desired
+installation repository root>` to install it as a post-commit hook. For example:
 
 ```bash
-git clone https://github.com/willzfarmer/todo-tools
-cd todo-tools
-./todo-tools.py -i ~/myawesomerepo
+┬─[william@fillory:~/todo-tools]
+╰─>$ git clone https://github.com/willzfarmer/todo-tools
+┬─[william@fillory:~/todo-tools]
+╰─>$ cd todo-tools
+┬─[william@fillory:~/todo-tools]
+╰─>$ ./bin/todo -i ~/myawesomerepo
 ```
 
 And it's enabled on that repository! Woo!
+
+## Full Installation
+
+Note, you *do not have to do this to use this full installation*. The default
+installation method works without cluttering your `$PATH`. If you don't care
+about that, by all means make your life easier and do this.
+
+This boils down to creating a new directory `$HOME/bin`, copying `todo_tools` to
+`$HOME/bin`, and adding `$HOME/bin` to your bash path.  This full installation
+will also add `todo_tools` to your `.bashrc` to check for outstanding TODOs
+every time you create a new shell.
+
+**WARNING:** This cannot be undone.
+
+```bash
+┬─[william@fillory:~/todo-tools]
+╰─>$ python setup.py install
+```
