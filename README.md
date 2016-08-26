@@ -48,14 +48,7 @@ Note, you *do not have to do this to use this full installation*. The default
 installation method works without cluttering your `$PATH`. If you don't care
 about that, by all means make your life easier and do this.
 
-This boils down to creating a new directory `$HOME/bin`, copying `todo_tools` to
-`$HOME/bin`, and adding `$HOME/bin` to your bash path.  This full installation
-will also add `todo_tools` to your `.bashrc` to check for outstanding TODOs
-every time you create a new shell.
-
-**WARNING:** This cannot be undone.
-
 ```bash
 ┬─[william@fillory:~/todo-tools]
-╰─>$ python setup.py install
+╰─>$ python setup.py install --user
 ```

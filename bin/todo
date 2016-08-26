@@ -18,17 +18,21 @@ import re
 import sys
 import shutil
 
+# python2 compat
+if sys.version_info[0] == 2:
+    from future.builtins.misc import input
+
 import todo_tools
 
 
 def main():
     args = get_args()
 
-    # python 2 compatibility
-    if sys.version_info[0] == 2:
-        input = raw_input
-
-    if args.check:
+    if args.clear_todos:
+        sure = input("Are you sure you want to clear todo file? (y/N) ").lower()
+        if sure == 'y':
+            open(args.file, 'w').close()
+    elif args.check:
         todo_tools.run_as_checker(args)
     elif args.install_dir == []:
         sys.stdin = open('/dev/tty')
@@ -65,6 +69,8 @@ def get_args():
     parser.add_argument('-c', '--check', action='store_true', default=False,
                         help=('Check outstanding TODOs and alert '
                               'if any are overdue'))
+    parser.add_argument('--clear-todos', action='store_true', default=False,
+                        help='Clear TODO file. Warning, cannot be undone.')
     args = parser.parse_args()
     # create the todo file if it doesn't exist
     args.file = os.path.abspath(args.file)
