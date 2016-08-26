@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
  _____ ___  ____   ___    _____           _
@@ -9,14 +9,11 @@
 
 """
 
-from __future__ import print_function
-
 import argparse
 import os
 import stat
 import re
 import sys
-import shutil
 
 # python2 compat
 if sys.version_info[0] == 2:
@@ -28,7 +25,20 @@ import todo_tools
 def main():
     args = get_args()
 
-    if args.clear_todos:
+    if args.install_to_bashrc:
+        bashrcfilename = os.path.join(os.path.expanduser('~/.bashrc'))
+        already_installed = False
+        if os.path.isfile(bashrcfilename):
+            with open(bashrcfilename, 'r') as bashrcfile:
+                for line in bashrcfile.readlines():
+                    if re.search('todo -c', line):
+                        already_installed = True
+        else:
+            already_installed = False
+        if not already_installed:
+            with open(bashrcfilename, 'a') as bashrcfile:
+                bashrcfile.write('\ntodo -c\n')
+    elif args.clear_todos:
         sure = input("Are you sure you want to clear todo file? (y/N) ").lower()
         if sure == 'y':
             open(args.file, 'w').close()
@@ -71,6 +81,8 @@ def get_args():
                               'if any are overdue'))
     parser.add_argument('--clear-todos', action='store_true', default=False,
                         help='Clear TODO file. Warning, cannot be undone.')
+    parser.add_argument('--install-to-bashrc', action='store_true', default=False,
+                        help='Install automatic checker to .bashrc.')
     args = parser.parse_args()
     # create the todo file if it doesn't exist
     args.file = os.path.abspath(args.file)
