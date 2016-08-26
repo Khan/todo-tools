@@ -28,6 +28,19 @@ These might be TODOs.  Did you mean to do them?
 
 ## Installation
 
+We have three different ways to install this.
+
+### PyPI
+
+**[Coming Soon]**
+
+```bash
+┬─[william@fillory:~/todo-tools]
+╰─>$ pip install todo_tools --user
+```
+
+### By Hand
+
 Clone this repository using `git clone`, and then run `./bin/todo -i <desired
 installation repository root>` to install it as a post-commit hook. For example:
 
@@ -42,7 +55,7 @@ installation repository root>` to install it as a post-commit hook. For example:
 
 And it's enabled on that repository! Woo!
 
-## Full Installation
+### Setuptools
 
 Note, you *do not have to do this to use this full installation*. The default
 installation method works without cluttering your `$PATH`. If you don't care
@@ -51,4 +64,6 @@ about that, by all means make your life easier and do this.
 ```bash
 ┬─[william@fillory:~/todo-tools]
 ╰─>$ python setup.py install --user
+┬─[william@fillory:~/todo-tools]
+╰─>$ todo --install-to-bashrc
 ```
