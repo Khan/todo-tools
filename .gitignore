@@ -1,1 +1,4 @@
 *.p*~
+*build*
+*__pycache__*
+*.egg-info*
