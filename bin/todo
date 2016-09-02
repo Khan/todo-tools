@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""
+r"""
  _____ ___  ____   ___    _____           _
 |_   _/ _ \|  _ \ / _ \  |_   _|__   ___ | |___
   | || | | | | | | | | |   | |/ _ \ / _ \| / __|
@@ -12,14 +12,13 @@
 import argparse
 import os
 import stat
-import re
 import sys
+
+import todo_tools
 
 # python2 compat
 if sys.version_info[0] == 2:
-    from future.builtins.misc import input
-
-import todo_tools
+    input = raw_input
 
 
 def main():
@@ -27,9 +26,10 @@ def main():
 
     if args.install_to_bashrc:
         bashrcfilename = os.path.join(os.path.expanduser('~/.bashrc'))
-        todo_tools.add_line_to_file_if_not_exists(bashrcfilename, 'todo -c', '\ntodo -c\n')
+        todo_tools.add_line_to_file_if_not_exists(bashrcfilename,
+                                                  'todo -c', '\ntodo -c\n')
     elif args.clear_todos:
-        sure = input("Are you sure you want to clear todo file? (y/N) ").lower()
+        sure = input("Clear the todo file? (y/N) ").lower()
         if sure == 'y':
             open(args.file, 'w').close()
     elif args.check:
@@ -41,18 +41,22 @@ def main():
         for install in [x for x in args.install_dir
                         if os.path.isdir(os.path.join(x, '.git'))]:
             hookfilename = os.path.join(install, '.git/hooks/post-commit')
-            todo_tools.add_line_to_file_if_not_exists(hookfilename, 'todo', '#!/bin/bash\n\ntodo\n')
+            todo_tools.add_line_to_file_if_not_exists(hookfilename,
+                                                      'todo',
+                                                      '#!/bin/bash\n\ntodo\n')
 
             # https://stackoverflow.com/questions/12791997/how-do-you-do-a-simple-chmod-x-from-within-python
             # TL;DR chmod +x hookfile
-            st = os.stat(hookfilename)
-            os.chmod(hookfilename, st.st_mode | stat.S_IEXEC)
+            file_stats = os.stat(hookfilename)
+            os.chmod(hookfilename, file_stats.st_mode | stat.S_IEXEC)
 
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('install_dir', metavar='D', type=str, nargs='*', default=None,
-                        help=('Install post-commit hook to git repositor(y|ies).'))
+    parser.add_argument('install_dir', metavar='repo_dir', type=str,
+                        nargs='*', default=None,
+                        help=('Install post-commit hook to git '
+                              'repositor(y|ies).'))
     parser.add_argument('-f', '--file', type=str,
                         default=os.path.join(os.path.expanduser('~/.todo')),
                         help=('What file to use as our todo file.'))
@@ -61,7 +65,8 @@ def get_args():
                               'if any are overdue'))
     parser.add_argument('--clear-todos', action='store_true', default=False,
                         help='Clear TODO file. Warning, cannot be undone.')
-    parser.add_argument('--install-to-bashrc', action='store_true', default=False,
+    parser.add_argument('--install-to-bashrc', action='store_true',
+                        default=False,
                         help='Install automatic checker to .bashrc.')
     args = parser.parse_args()
     # create the todo file if it doesn't exist

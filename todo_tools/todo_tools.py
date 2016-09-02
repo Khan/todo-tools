@@ -21,6 +21,7 @@ except ImportError:
 
 
 def run_as_checker(args):
+    """Check for outstanding TODOs"""
     outstanding = []
     with open(args.file, 'r') as todofile:
         for line in todofile.readlines():
@@ -37,6 +38,8 @@ def run_as_checker(args):
 
 def run_as_hook(filename, commitA=None, commitB=None, skip=False):
     """
+    Runs in "hook" mode, called solely by git.
+
     filename: str
     commitA: str
     commitB: str
@@ -60,7 +63,7 @@ def run_as_hook(filename, commitA=None, commitB=None, skip=False):
         # Find all modified lines in file
         for line in str(filediff).split('\n'):
             if re.match('^\+', line) and re.match('^\+\+\+', line) is None:
-                clean_line =  re.sub('^\+ *', '', line)
+                clean_line = re.sub('^\+ *', '', line)
                 if check_is_todo(clean_line):
                     todos.append((filediff.b_path, clean_line))
                 elif check_is_potential_todo(clean_line):
@@ -89,6 +92,7 @@ def run_as_hook(filename, commitA=None, commitB=None, skip=False):
 
 
 def check_date_and_save(todofile, filename, line):
+    """If the todo is a dated todo, save it to file"""
     # This matches "TODO(name[YYYY-MM-DD]): do stuff"
     date_match = re.search('TODO\([^\)\[]*\[(.*)\]\):?\ *(.*)', line)
     if date_match:
@@ -97,14 +101,17 @@ def check_date_and_save(todofile, filename, line):
 
 
 def check_is_todo(line):
+    """Check to see if line contains any type of todo"""
     return re.search('[#(//)] ?[Tt][Oo][Dd][Oo][:\(]', line) is not None
 
 
 def check_is_potential_todo(line):
+    """Check to see if 'TODO' is mentioned in the line"""
     return re.search('TODO', line) is not None
 
 
 def add_line_to_file_if_not_exists(filename, search_str, insert_str):
+    """Add a line to a file if it's not already there"""
     already_installed = False
     if os.path.isfile(filename):
         with open(filename, 'r') as ofile:
