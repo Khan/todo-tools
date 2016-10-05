@@ -7,21 +7,36 @@ Well, fear no more about losing track of those desired code changes. This tool
 is a git post-commit hook that warns you about `TODO`s that you left in your
 code.
 
-## Example (How do you mean?)
+## Quickstart
 
-```
+```bash
+$ pip install todo_tools
+$ cd webapp
+$ todo --register-git-hook .
+$ git commit -a -m 'These are all of my todos'
 Here's a list of TODOs you added in this commit:
 ------------------------------------------------
-+ todo_tools.py | # TODO(@zeb[2016-08-04]): pls check if werks
-+ todo_tools.py | # TODO(@zeb[2015-08-04]): This should fail
-+ todo_tools.py | # TODO: copy instance of running file to given directory
-+ todo_tools.py | # TODO: consolidate saving
-+ todo_tools.py | if potential_todos:  # TODO: test
-+ todo_tools.py | print('')  # print newline for prettiness # TODO: ask user
-These might be TODOs.  Did you mean to do them?
------------------------------------------------
-+ README.md | # TODO Tools (y/N) 
++ website.py | # TODO(zeb[2017-01-01]): Wish people happy new year
++ website.py | # TODO(zeb[2016-08-04]): Remove this when AB test ends
++ constants.jsx | // TODO: This should be done!
 ```
+
+Now whenever you run `todo --check`, you'll be notified of past-due TODOs
+
+If you want that to happen every time you start a shell, you can
+
+```bash
+$ todo --install-to-bashrc
+```
+
+Or
+
+```bash
+$ echo 'todo --check' >> ~/.bashrc
+```
+
+You can manually edit todos by looking in `~/.todo`.
+
 
 ## Installation
 
@@ -51,7 +66,7 @@ installation repository root>` to install it as a post-commit hook. For example:
 ┬─[william@fillory:~/todo-tools]
 ╰─>$ cd todo-tools
 ┬─[william@fillory:~/todo-tools]
-╰─>$ ./bin/todo -i ~/myawesomerepo
+╰─>$ ./bin/todo --register-git-hook ~/myawesomerepo
 ```
 
 And it's enabled on that repository! Woo!

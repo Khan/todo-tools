@@ -34,27 +34,27 @@ def main():
             open(args.file, 'w').close()
     elif args.check:
         todo_tools.run_as_checker(args)
-    elif args.install_dir == []:
+    elif args.repo_dir:
+        if not os.path.isdir(os.path.join(args.repo_dir, '.git')):
+            print("Target dir does not appear to be a git repository")
+            return 1
+        hookfilename = os.path.join(args.repo_dir, '.git/hooks/post-commit')
+        todo_tools.add_line_to_file_if_not_exists(
+            hookfilename, 'todo', '#!/bin/bash\n\ntodo\n')
+
+        # https://stackoverflow.com/questions/12791997/how-do-you-do-a-simple-chmod-x-from-within-python
+        # TL;DR chmod +x hookfile
+        file_stats = os.stat(hookfilename)
+        os.chmod(hookfilename, file_stats.st_mode | stat.S_IEXEC)
+    else:
         sys.stdin = open('/dev/tty')
         todo_tools.run_as_hook(args.file)
-    else:
-        for install in [x for x in args.install_dir
-                        if os.path.isdir(os.path.join(x, '.git'))]:
-            hookfilename = os.path.join(install, '.git/hooks/post-commit')
-            todo_tools.add_line_to_file_if_not_exists(hookfilename,
-                                                      'todo',
-                                                      '#!/bin/bash\n\ntodo\n')
-
-            # https://stackoverflow.com/questions/12791997/how-do-you-do-a-simple-chmod-x-from-within-python
-            # TL;DR chmod +x hookfile
-            file_stats = os.stat(hookfilename)
-            os.chmod(hookfilename, file_stats.st_mode | stat.S_IEXEC)
 
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('install_dir', metavar='repo_dir', type=str,
-                        nargs='*', default=None,
+    parser.add_argument('--register-git-hook', metavar='REPO_DIR',
+                        dest='repo_dir',
                         help=('Install post-commit hook to git '
                               'repositor(y|ies).'))
     parser.add_argument('-f', '--file', type=str,
