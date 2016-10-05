@@ -7,11 +7,8 @@ Profile the TODO-tools
 import sys
 import os
 import io
-import statistics
 import argparse
 import time
-import git
-import seaborn
 import tqdm
 import matplotlib.pyplot as plt
 
@@ -24,8 +21,6 @@ def main():
 
     os.chdir(args.repo)
 
-    repo = git.Repo('.')
-
     actualstdout = sys.stdout
     sys.stdout = io.StringIO()
 
@@ -33,8 +28,7 @@ def main():
     for i in tqdm.tqdm(range(5000)):
         stime = time.time()
         todo_tools.run_as_hook(os.path.join(os.path.expanduser('~/.todo')),
-                                'HEAD~{}'.format(i), 'HEAD~{}'.format(i + 1),
-                                skip=True)
+                                'HEAD~{}'.format(i), 'HEAD~{}'.format(i + 1))
         times.append(time.time() - stime)
 
     sys.stdout = actualstdout
@@ -43,7 +37,6 @@ def main():
 
     plt.hist(times, bins=30)
     plt.savefig('./profile_hist.png')
-
 
 
 def get_args():

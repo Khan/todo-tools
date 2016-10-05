@@ -36,14 +36,13 @@ def run_as_checker(args):
             print(todo[:-1])
 
 
-def run_as_hook(filename, commitA=None, commitB=None, skip=False):
+def run_as_hook(filename, commitA=None, commitB=None):
     """
     Runs in "hook" mode, called solely by git.
 
     filename: str
     commitA: str
     commitB: str
-    skip: bool
 
     commitA and commitB exist /solely/ for profiling and testing
     """
@@ -78,16 +77,13 @@ def run_as_hook(filename, commitA=None, commitB=None, skip=False):
                 check_date_and_save(todofile, todo[0], todo[1])
     if potential_todos:  # TODO: test
         print(color.bold(color.yellow(
+            "\n"
             "These might be TODOs.  Did you mean to do them?\n"
             "-----------------------------------------------")))
         with open(filename, 'a') as todofile:
             for todo in potential_todos:
-                if skip:
-                    choice = 'n'
-                else:
-                    choice = input('+ {} | {} (y/N) '.format(*todo))
-                if choice.lower() == 'y':
-                    check_date_and_save(todofile, todo[0], todo[1])
+                print('+ {} | {}'.format(*todo))
+                check_date_and_save(todofile, todo[0], todo[1])
     print('')
 
 
