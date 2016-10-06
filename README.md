@@ -21,7 +21,14 @@ Here's a list of TODOs you added in this commit:
 + constants.jsx | // TODO: This should be done!
 ```
 
-Now whenever you run `todo --check`, you'll be notified of past-due TODOs
+Now whenever you run `todo --check`, you'll be notified of past-due TODOs:
+
+```bash
+$ todo --check
+Warning! You should have already done this!:
+--------------------------------------------
+2016-08-04  |  website.py  |  # TODO(zeb[2016-08-04]): Remove this when AB test ends
+```
 
 If you want that to happen every time you start a shell, you can
 
