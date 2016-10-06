@@ -3,21 +3,14 @@
 
 from __future__ import print_function
 
-import sys
 import os
 from datetime import datetime as dt
 import re
 
 
 # Make sure libraries are installed
-try:
-    from fabulous import color
-    import git
-except ImportError:
-    print('You don\'t have the necessary libraries!')
-    print('Please run: pip install -r requirements.txt --user')
-    print('and try again')
-    sys.exit(0)
+from fabulous import color
+import git
 
 
 def run_as_checker(args):
