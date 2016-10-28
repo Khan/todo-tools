@@ -78,7 +78,13 @@ def run_as_hook(filename, commitA=None, commitB=None):
 
 def check_date_and_save(todo_filename, filename, line):
     """If the todo is a dated todo, save it to file"""
-    date_match = re.search('TODO\([^\)\[]*\[(.*)\]\):?\ *(.*)', line)
+    date_match = re.search(
+        (
+            'TODO\('                      # Literal TODO(
+            '[^\)\[]*'                    # Username: anything but ')' or '['
+            '\[(\d\d\d\d\-\d\d\-\d\d)\]'  # Date string YYYY-MM-DD in brackets
+            '\):'                         # Closing literal ')' then ':'
+        ), line)
     if date_match:
         date = date_match.group(1)
         write_str = '{}  |  {}  |  {}\n'.format(date, filename, line)
