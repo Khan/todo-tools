@@ -1,11 +1,23 @@
 # TODO Tools
 
-Hey, do you like `TODO`s? Yeah, we all probably like them a little too much...
-Why write actual code when you could just leave a `TODO`?
+Have you ever come across this in your codebase:
+```
+# TODO(person-who-left-the-company-2-years-ago): Definitely remove this by Y2K
+```
 
-Well, fear no more about losing track of those desired code changes. This tool
-is a git post-commit hook that warns you about `TODO`s that you left in your
-code.
+TODO Tools is here to help.
+
+
+## What is it?
+
+ 1. A git post-commit hook to check for new TODOs
+    - If they match the format `TODO(username[YYYY-MM-DD]): Message`, add them
+      to your `~/.todo` file
+    - Regardless of format, give the committer a summary of all TODOs they are
+      committing.  Maybe they meant to actually do them in this commit.
+ 2. A `~/.todo`-file auditor, looking for past-due TODOs and printing reminders
+ 3. A utility to install the git-hook and auditor
+
 
 ## Quickstart
 
@@ -43,46 +55,3 @@ $ echo 'todo --check' >> ~/.bashrc
 ```
 
 You can manually edit todos by looking in `~/.todo`.
-
-
-## Installation
-
-We have three different ways to install this.
-
-Note, you *do not have to do this to use the full installation*. The manual
-installation method works without cluttering your `$PATH`. If you don't care
-about that, by all means make your life easier and use `pip` or `setuptools`.
-
-### PyPI
-
-**[Coming Soon]**
-
-```bash
-┬─[william@fillory:~/todo-tools]
-╰─>$ pip install todo_tools --user
-```
-
-### By Hand
-
-Clone this repository using `git clone`, and then run `./bin/todo -i <desired
-installation repository root>` to install it as a post-commit hook. For example:
-
-```bash
-┬─[william@fillory:~/todo-tools]
-╰─>$ git clone https://github.com/willzfarmer/todo-tools
-┬─[william@fillory:~/todo-tools]
-╰─>$ cd todo-tools
-┬─[william@fillory:~/todo-tools]
-╰─>$ ./bin/todo --register-git-hook ~/myawesomerepo
-```
-
-And it's enabled on that repository! Woo!
-
-### Setuptools
-
-```bash
-┬─[william@fillory:~/todo-tools]
-╰─>$ python setup.py install --user
-┬─[william@fillory:~/todo-tools]
-╰─>$ todo --install-to-bashrc
-```
