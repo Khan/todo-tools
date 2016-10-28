@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='TODO-Tools',
-    version='1.0.3',
+    version='1.0.4',
     description='Tools to manage git TODOs',
     license='MIT',
     packages=['todo_tools'],

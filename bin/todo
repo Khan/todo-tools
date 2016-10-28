@@ -26,8 +26,8 @@ def main():
 
     if args.install_to_bashrc:
         bashrcfilename = os.path.join(os.path.expanduser('~/.bashrc'))
-        todo_tools.add_line_to_file_if_not_exists(bashrcfilename,
-                                                  'todo -c', '\ntodo -c\n')
+        todo_tools.add_line_to_file_if_not_exists(
+            bashrcfilename, 'todo --check\n')
     elif args.clear_todos:
         sure = input("Clear the todo file? (y/N) ").lower()
         if sure == 'y':

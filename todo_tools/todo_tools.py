@@ -7,8 +7,6 @@ import os
 from datetime import datetime as dt
 import re
 
-
-# Make sure libraries are installed
 from fabulous import color
 import git
 
@@ -64,29 +62,27 @@ def run_as_hook(filename, commitA=None, commitB=None):
         print(color.bold(color.yellow(
             "Here's a list of TODOs you added in this commit:\n"
             "------------------------------------------------")))
-        with open(filename, 'a') as todofile:
-            for todo in todos:
-                print('+ {} | {}'.format(*todo))
-                check_date_and_save(todofile, todo[0], todo[1])
-    if potential_todos:  # TODO: test
+        for todo in todos:
+            print('+ {} | {}'.format(*todo))
+            check_date_and_save(filename, todo[0], todo[1])
+    if potential_todos:
         print(color.bold(color.yellow(
             "\n"
             "These might be TODOs.  Did you mean to do them?\n"
             "-----------------------------------------------")))
-        with open(filename, 'a') as todofile:
-            for todo in potential_todos:
-                print('+ {} | {}'.format(*todo))
-                check_date_and_save(todofile, todo[0], todo[1])
+        for todo in potential_todos:
+            print('+ {} | {}'.format(*todo))
+            check_date_and_save(filename, todo[0], todo[1])
     print('')
 
 
-def check_date_and_save(todofile, filename, line):
+def check_date_and_save(todo_filename, filename, line):
     """If the todo is a dated todo, save it to file"""
-    # This matches "TODO(name[YYYY-MM-DD]): do stuff"
     date_match = re.search('TODO\([^\)\[]*\[(.*)\]\):?\ *(.*)', line)
     if date_match:
         date = date_match.group(1)
-        todofile.write('{}  |  {}  |  {}\n'.format(date, filename, line))
+        write_str = '{}  |  {}  |  {}\n'.format(date, filename, line)
+        add_line_to_file_if_not_exists(todo_filename, write_str)
 
 
 def check_is_todo(line):
@@ -99,17 +95,16 @@ def check_is_potential_todo(line):
     return re.search('TODO', line) is not None
 
 
-def add_line_to_file_if_not_exists(filename, search_str, insert_str):
+def add_line_to_file_if_not_exists(filename, insert_str):
     """Add a line to a file if it's not already there"""
-    already_installed = False
+    already_there = False
     if os.path.isfile(filename):
         with open(filename, 'r') as ofile:
-            for line in ofile.readlines():
-                if re.search(search_str, line):
-                    already_installed = True
+            if insert_str in ofile.readlines():
+                already_there = True
     else:
-        already_installed = False
-    if not already_installed:
+        already_there = False
+    if not already_there:
         with open(filename, 'a') as ofile:
             ofile.write(insert_str)
     return None
